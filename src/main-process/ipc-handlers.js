@@ -1,18 +1,18 @@
-// <-- comment (src/main-process/ipc-handlers.js)
 // src/main-process/ipc-handlers.js
-const { ipcMain, dialog, BrowserWindow } = require('electron');
+const { ipcMain, dialog, BrowserWindow, app } = require('electron'); // Vérifiez que 'app' est ici
 const fs = require('node:fs');
 const path = require('node:path');
 const { processZipData } = require('./zip-processor.js');
 const { generateTreeString } = require('./tree-generator.js');
 const { getMainWindow } = require('./window-manager.js');
 
-// --- Load Comment Syntax Map from JSON (Keep this section exactly as before) ---
+// --- Load Comment Syntax Map from JSON ---
 let loadedCommentMap = {};
-let defaultCommentSyntax = { start: '//', end: '//' }; // Hardcoded fallback
+let defaultCommentSyntax = { start: '//', end: '//' };
 
 try {
-    const mapFilePath = path.join(__dirname, 'code_languages.json');
+    // Correction du chemin si code_languages.json est à la racine
+    const mapFilePath = path.join(app.getAppPath(), 'code_languages.json');
     console.log(`Main Process: Attempting to load comment map from: ${mapFilePath}`);
     if (fs.existsSync(mapFilePath)) {
         const fileContent = fs.readFileSync(mapFilePath, 'utf8');
@@ -35,39 +35,30 @@ try {
 // --- End Loading Comment Syntax Map ---
 
 
-// --- Function to generate concatenated text with ADAPTED comments AND specified format ---
+// --- Function to generate concatenated text ---
 function generateConcatenatedText(filesData) {
     let output = '';
     const sortedPaths = Object.keys(filesData).sort();
 
     sortedPaths.forEach(filePath => {
         const content = filesData[filePath];
-        // Only include actual text content, skip placeholders/errors/binary
         if (content && typeof content === 'string' && !content.startsWith('[') && !content.endsWith(']')) {
             const extension = path.extname(filePath).toLowerCase();
-            // Find the syntax in the loaded map, fallback to the determined default syntax
             const syntax = loadedCommentMap[extension] || defaultCommentSyntax;
 
-            // Add comments only if syntax is defined and start is not null
-            if (syntax && syntax.start) {
-                 // --- MODIFIED MARKER CONSTRUCTION ---
-                 // Create the text part including the extension type
+            if (syntax && syntax.start !== null && syntax.end !== null) {
                  const commentTextStart = `<-- comment (${extension} file)(${filePath})`;
                  const commentTextEnd = `<-- end comment (${extension} file)(${filePath})`;
-
-                 // Construct the full marker with appropriate delimiters
-                 const startMarker = `${syntax.start} ${commentTextStart} ${syntax.end === syntax.start ? '' : syntax.end}`.trim(); // Use trim to handle potential extra spaces if end delimiter is empty
+                 const startMarker = `${syntax.start} ${commentTextStart} ${syntax.end === syntax.start ? '' : syntax.end}`.trim();
                  const endMarker = `${syntax.start} ${commentTextEnd} ${syntax.end === syntax.start ? '' : syntax.end}`.trim();
-                 // --- END MODIFIED MARKER CONSTRUCTION ---
 
                  output += `${startMarker}\n`;
                  output += `${content.trim()}\n`;
                  output += `${endMarker}\n\n`;
             } else {
-                // If no comment syntax (like JSON or unknown extension without default), use simpler separator
-                output += `--- START (${filePath}) ---\n`;
-                output += `${content.trim()}\n`;
-                output += `--- END (${filePath}) ---\n\n`;
+                 output += `--- START OF FILE ${filePath} ---\n`;
+                 output += `${content.trim()}\n`;
+                 output += `--- END OF FILE ${filePath} ---\n\n`;
             }
         }
     });
@@ -75,10 +66,9 @@ function generateConcatenatedText(filesData) {
 }
 
 
-// --- initializeIpcHandlers Function (Keep exactly as before) ---
+// --- initializeIpcHandlers Function ---
 function initializeIpcHandlers() {
 
-    // Helper to get the window instance safely
     function getWindowInstance(event) {
         return event ? BrowserWindow.fromWebContents(event.sender) : getMainWindow();
     }
@@ -101,16 +91,21 @@ function initializeIpcHandlers() {
         const window = getWindowInstance(event);
         if (window) {
             if (window.isMaximized()) {
-                console.log("IPC: Unmaximizing window");
                 window.unmaximize();
             } else {
-                console.log("IPC: Maximizing window");
                 window.maximize();
             }
         } else {
             console.warn("IPC: toggleMaximizeApp - Window instance not found.");
         }
     });
+
+    // --- Handler to get app version --- <<< C'EST CE BLOC QUI DOIT ÊTRE PRÉSENT >>> ---
+    ipcMain.handle('get-app-version', () => {
+        console.log("IPC: get-app-version invoked");
+        return app.getVersion(); // Renvoie la version
+    });
+    // --- Fin du Handler ---
 
     // --- App Specific Handlers ---
     ipcMain.handle('process-zip', async (event, filePath) => {
@@ -124,12 +119,7 @@ function initializeIpcHandlers() {
 
         try {
             const treeString = generateTreeString(processResult.entries);
-            console.log("Main Process: Tree string generated.");
-
-            // Use the function that generates ADAPTIVE comments with the specific format
             const concatenatedText = generateConcatenatedText(processResult.filesData);
-            console.log("Main Process: Concatenated text generated using loaded comment map and specific format.");
-
             return {
                 success: true,
                 treeString: treeString,
@@ -156,10 +146,7 @@ function initializeIpcHandlers() {
             const { canceled, filePath } = await dialog.showSaveDialog(window, {
                 title: 'Save Concatenated Output',
                 buttonLabel: 'Save',
-                filters: [
-                    { name: 'Text Files', extensions: ['txt'] },
-                    { name: 'All Files', extensions: ['*'] }
-                ],
+                filters: [ { name: 'Text Files', extensions: ['txt'] }, { name: 'All Files', extensions: ['*'] } ],
                  defaultPath: `zip-contents-${Date.now()}.txt`
             });
 
@@ -184,4 +171,3 @@ function initializeIpcHandlers() {
 }
 
 module.exports = { initializeIpcHandlers };
-// <-- end comment (src/main-process/ipc-handlers.js)

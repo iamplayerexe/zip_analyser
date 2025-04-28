@@ -1,7 +1,7 @@
 // <-- comment (renderer.js)
 // renderer.js (Root Renderer Process Logic)
 
-const { ipcRenderer } = require('electron');
+const { ipcRenderer } = require('electron'); // Assurez-vous qu'ipcRenderer est requis
 // --- Require Highlight.js ---
 const hljs = require('highlight.js');
 // ----------------------------
@@ -302,6 +302,34 @@ function initializeAppEventListeners() {
 }
 
 
+// --- Function to update title bar with version --- AJOUTÉE ICI ---
+async function updateAppTitleWithVersion() {
+    // Find the specific span for the title text using its ID
+    const titleSpan = document.getElementById('window-title-text');
+    if (!titleSpan) {
+        // Log an error if the element isn't found
+        console.error('Could not find title span element (#window-title-text).');
+        return;
+    }
+
+    try {
+        console.log("Renderer: Requesting app version via IPC...");
+        // Call the 'get-app-version' handler in the main process via IPC
+        const appVersion = await ipcRenderer.invoke('get-app-version');
+        console.log(`Renderer: Received app version: ${appVersion}`);
+        if (appVersion) {
+             // Construct the new title string including the version
+            titleSpan.textContent = `Zip Analyser v${appVersion}`; // Update the element text
+        }
+    } catch (error) {
+        // Log any error that occurs during the IPC call
+        console.error('Renderer: Failed to get app version via IPC:', error);
+        // If fetching fails, the title will remain the default one set in HTML
+    }
+}
+// --- FIN DE LA FONCTION AJOUTÉE ---
+
+
 // --- Initialization Code ---
 document.addEventListener('DOMContentLoaded', () => {
     console.log("Renderer: DOM Content Loaded.");
@@ -312,6 +340,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Then setup listeners
     initializeAppEventListeners(); // Check for essential elements including prompt
+
+    // --- APPEL DE LA FONCTION AJOUTÉ ICI ---
+    // Update the title bar text to include the version
+    updateAppTitleWithVersion();
+    // --- FIN DE L'APPEL AJOUTÉ ---
 
     // Initial UI state setup - resetUI SHOWS the prompt
     resetUI();
@@ -327,3 +360,4 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log("Zip Analyser UI Initialized (Renderer).");
 });
 // <-- end comment (renderer.js)
+// <-- end comment (.js file)(renderer.js)
