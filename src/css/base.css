@@ -1,0 +1,156 @@
+/* src/css/base.css */
+
+:root {
+    /* --- Variables from FIRST Inspiration base.css --- */
+    --sidebar-width-expanded: 240px;
+    --sidebar-width-collapsed: 60px;
+    --filter-button-padding-horizontal: 12px;
+    --toggle-button-height-expanded: 32px;
+    --toggle-button-icon-padding-left: 10px;
+    --toggle-button-height-collapsed: 32px;
+    --toggle-button-width-collapsed: 32px;
+    --toggle-button-top-offset-collapsed: 10px;
+    --transition-speed: 0.3s;
+    --transition-speed-fast: 0.15s; /* Added for cards */
+    --transition-ease: cubic-bezier(0.4, 0, 0.2, 1);
+    --swal-primary-color: #4488FF; /* Keeping original Swal blue */
+    --swal-primary-hover: #5599FF;
+    --swal-cancel-color: #6c757d;
+    --swal-cancel-hover: #5a6268;
+    --swal-deny-color: #d33;
+    --swal-deny-hover: #e54444;
+    --swal-bg: #383c42;
+    --swal-input-bg: #454a51;
+    --swal-border-color: #555b61;
+    --main-padding: 20px;
+
+    /* --- ADDED/ADJUSTED Variables --- */
+    --titlebar-os-height: 32px; /* Height of top OS-like part */
+    --navbar-app-height: 60px; /* Height for app bar (title/+) */
+    --navbar-views-height: 45px; /* Height for view switcher styling */
+    /* Calculated variable for combined fixed height */
+    --combined-titlebar-height: calc(var(--titlebar-os-height) + var(--navbar-app-height));
+
+    --accent-primary: #7289DA;  /* Blurple */
+    --accent-primary-dark: #5f73bc;
+    --accent-primary-light: #a0b0f0; /* Lighter Blurple for hover */
+    --text-title-navbar: var(--accent-primary); /* Title uses blurple */
+    --text-primary: #e0e0e0; /* General text */
+    --text-secondary: #b0b0b0; /* Dimmer text (e.g., code content) */
+    --text-disabled: #7a7a7a; /* Disabled elements */
+
+    --bg-primary: #1f1f1f; /* Main body background */
+    --bg-secondary: #2b2b2b; /* Panel background */
+    --bg-tertiary: #313338; /* Panel headers */
+    --bg-code-area: #232428; /* Background for code/tree wrappers */
+
+    --border-color: #48545c;      /* Body border */
+    --border-color-subtle: #444;  /* Navbar border, panel borders */
+
+    /* Variables for Action Button Style (from inspiration) */
+    --button-action-bg: #2e2e2e;
+    --button-action-hover-bg: #444;
+    --button-action-disabled-bg: #404040;
+    --button-action-shadow: 0 4px 6px rgba(0, 0, 0, 0.4);
+    --button-action-hover-shadow: 0 6px 10px rgba(0, 0, 0, 0.5);
+    --button-action-disabled-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    /* Variables for '+' Button using action style */
+    --action-button-bg: var(--button-action-bg);
+    --action-button-hover-bg: var(--button-action-hover-bg);
+    --action-button-shadow: var(--button-action-shadow);
+    --action-button-hover-shadow: var(--button-action-hover-shadow);
+    --action-button-disabled-shadow: var(--button-action-disabled-shadow);
+    --action-button-disabled-bg: var(--button-action-disabled-bg);
+
+    --success-color: #228B22;
+    --danger-color-for-error: var(--swal-deny-color);
+    --font-sans: Arial, sans-serif; /* Revert to original font */
+    --font-mono: 'JetBrains Mono', Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+    --border-radius-base: 4px; /* Inspiration radius */
+    --border-radius-small: 3px;
+}
+
+html {
+  box-sizing: border-box;
+  height: 100%;
+}
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+body {
+  font-family: var(--font-sans);
+  margin: 0;
+  background-color: var(--bg-primary); /* Use variable */
+  color: var(--text-primary); /* Use variable */
+  overflow: hidden; /* Prevent body scroll */
+  height: 100vh;
+  border: 1px solid var(--border-color);
+  /* Padding for FIXED titlebar + FIXED app navbar */
+  /* This padding is adjusted by JS when views are shown */
+  padding-top: var(--combined-titlebar-height);
+  display: flex; /* Make body a flex container */
+  flex-direction: column; /* Stack children vertically */
+}
+
+.maximized body {
+    border: none;
+}
+
+/* --- Global Custom Focus Visible Styling --- */
+:focus-visible {
+  outline: none !important;
+  /* Use Blurple for focus */
+  box-shadow: 0 0 0 2px var(--accent-primary) !important;
+}
+/* --- END: Custom Focus Visible Styling --- */
+
+/* Basic button reset */
+button {
+    border: none; margin: 0; padding: 0; width: auto; overflow: visible;
+    background: transparent; color: inherit; font: inherit; line-height: normal;
+    -webkit-font-smoothing: inherit; -moz-osx-font-smoothing: inherit;
+    appearance: none; cursor: pointer; outline: none; user-select: none;
+}
+button:disabled { cursor: not-allowed; }
+
+
+/* --- SweetAlert --- (Using defined vars) --- */
+body.swal2-shown > [aria-hidden="true"] { filter: blur(2px) brightness(0.8); }
+.swal2-popup { background-color: var(--swal-bg) !important; color: var(--text-primary) !important; border: 1px solid var(--swal-border-color) !important; border-radius: var(--border-radius-base) !important; box-shadow: 0 5px 20px rgba(0, 0, 0, 0.6) !important; }
+.swal2-title { color: var(--text-primary) !important; font-weight: 500 !important; }
+.swal2-html-container { color: var(--text-secondary) !important; }
+.swal2-actions { margin-top: 20px !important; }
+/* Style Swal buttons like Action Buttons */
+.swal2-actions button {
+  margin: 0 8px !important;
+  border-radius: var(--border-radius-base) !important;
+  background-color: var(--button-action-bg);
+  border: none;
+  box-shadow: var(--button-action-shadow);
+  transition: background-color 0.3s, box-shadow 0.3s, transform 0.3s, opacity 0.3s;
+  padding: 10px 20px; font-size: 16px; color: #fff;
+}
+.swal2-actions button:hover:not(:disabled) {
+  background-color: var(--button-action-hover-bg);
+  box-shadow: var(--button-action-hover-shadow);
+  transform: scale(1.03);
+}
+.swal2-actions button:disabled {
+    cursor: not-allowed; opacity: 0.7;
+    box-shadow: var(--button-action-disabled-shadow);
+    background-color: var(--button-action-disabled-bg);
+    transform: none; color: var(--text-disabled);
+}
+/* Override specific Swal button colors */
+.swal2-confirm { background: var(--swal-primary-color) !important; color: #fff !important; }
+.swal2-confirm:hover { background: var(--swal-primary-hover) !important; }
+.swal2-cancel { background: var(--swal-cancel-color) !important; color: var(--text-primary) !important; } /* Use text-primary for cancel text */
+.swal2-cancel:hover { background: var(--swal-cancel-hover) !important; }
+.swal2-deny { background: var(--swal-deny-color) !important; color: #fff !important; }
+.swal2-deny:hover { background: var(--swal-deny-hover) !important; }
+.swal2-input, .swal2-textarea { background-color: var(--swal-input-bg) !important; color: var(--text-primary) !important; border: 1px solid var(--swal-border-color) !important; border-radius: var(--border-radius-base) !important; box-shadow: inset 0 1px 2px rgba(0,0,0,0.2) !important; }
+.swal2-input:focus, .swal2-textarea:focus { border-color: var(--swal-primary-color) !important; box-shadow: 0 0 0 2px var(--swal-primary-color) !important; }
+.swal2-toast.swal2-popup { box-shadow: 0 3px 10px rgba(0,0,0,0.5) !important; border-radius: var(--border-radius-base) !important; }
+.swal2-toast .swal2-title { font-size: 0.95em !important; }
+.swal2-toast .swal2-timer-progress-bar { background: var(--swal-primary-color) !important; }

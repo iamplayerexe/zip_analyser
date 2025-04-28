@@ -1,0 +1,270 @@
+/* <-- comment (src/css/main.css) */
+/* src/css/main.css */
+
+/* --- Layout: Content Area --- */
+#content-area {
+    flex-grow: 1; /* Takes up available vertical space below fixed elements */
+    position: relative; /* Keep for positioning indicator */
+    box-sizing: border-box;
+    min-height: 0; /* Allows shrinking within flex container (body) */
+    padding: var(--main-padding); /* Padding INSIDE the area, around children */
+    background-color: var(--bg-primary);
+    /* Make content-area a flex container for its children */
+    display: flex;
+    flex-direction: column;
+    overflow: hidden; /* Prevent #content-area itself from scrolling */
+}
+
+/* --- Initial Prompt Styling --- */
+.initial-prompt-container {
+    display: flex; /* Use flex for centering */
+    flex-direction: column; /* Stack content vertically (optional) */
+    justify-content: center; /* Center vertically */
+    align-items: center; /* Center horizontally */
+    flex-grow: 1; /* Take up all available space when visible */
+    min-height: 0; /* Allow shrinking if needed */
+    color: var(--text-disabled); /* Muted text color */
+    font-size: 1.3em; /* Make text noticeable */
+    text-align: center;
+    user-select: none; /* Prevent text selection */
+    /* Animation for subtle appearance */
+    opacity: 0;
+    animation: fadeIn 0.8s ease-out 0.5s forwards; /* Fade in after loading screen */
+}
+.initial-prompt-container p {
+    margin: 0; /* Remove default paragraph margins */
+}
+/* --- End Initial Prompt Styling --- */
+
+
+#processing-indicator {
+    position: absolute; top: 40%; left: 50%; /* Position relative to #content-area */
+    transform: translate(-50%, -50%);
+    font-size: 16px; color: var(--text-primary); padding: 25px 35px;
+    background: rgba(42, 42, 42, 0.9); border-radius: var(--border-radius-base);
+    border: 1px solid var(--border-color-subtle); z-index: 100; /* Ensure it's above other content */
+    box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+}
+
+
+/* --- VIEW PANELS --- */
+.view-panel {
+    display: none; /* Hidden by default */
+    box-sizing: border-box;
+    display: flex; /* Panel is a flex container for header + wrapper */
+    flex-direction: column;
+    border: 1px solid var(--border-color-subtle);
+    border-radius: var(--border-radius-base);
+    background-color: var(--bg-secondary);
+    overflow: hidden; /* Panel itself should not scroll */
+    box-shadow: 0 3px 8px rgba(0,0,0,0.4);
+}
+
+.view-panel.view-active {
+    display: flex; /* Ensure it's flex when active */
+    flex-grow: 1; /* Make the active panel fill remaining vertical space */
+    min-height: 0; /* Crucial for flex children that need to shrink/scroll internally */
+    animation: fadeIn 0.4s var(--transition-ease); /* Fade in the panel */
+}
+
+/* --- Panel Header Styling --- */
+.panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 15px;
+    height: 44px; /* Fixed height */
+    background-color: var(--bg-tertiary);
+    border-bottom: 1px solid var(--border-color-subtle);
+    flex-shrink: 0; /* Prevent header from shrinking */
+}
+.panel-header h2 {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.panel-header .output-buttons,
+.panel-header .copy-button { /* Target the button directly if it's the only action */
+    margin-left: 15px;
+    flex-shrink: 0;
+}
+.panel-header .output-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+/* Small Button using Action Style Base */
+.small-button {
+    padding: 5px 12px;
+    font-size: 13px;
+    font-weight: 500;
+    border-radius: var(--border-radius-small);
+    background-color: var(--button-action-bg);
+    border: none;
+    color: #fff;
+    box-shadow: var(--button-action-shadow);
+    transition: background-color 0.3s, box-shadow 0.3s, transform 0.3s, opacity 0.3s;
+    white-space: nowrap;
+    cursor: pointer;
+}
+.small-button:hover:not(:disabled) {
+    background-color: var(--button-action-hover-bg);
+    box-shadow: var(--button-action-hover-shadow);
+    transform: scale(1.03);
+}
+.small-button:active:not(:disabled) {
+    transform: scale(1);
+    background-color: #3a3a3a;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.5);
+}
+.small-button:disabled {
+    cursor: not-allowed;
+    opacity: 0.7;
+    box-shadow: var(--button-action-disabled-shadow);
+    background-color: var(--button-action-disabled-bg);
+    transform: none;
+    color: var(--text-disabled);
+}
+
+/* Wrappers for scrollable content INSIDE panels */
+.tree-wrapper, .contents-wrapper, .output-wrapper {
+    flex-grow: 1; /* Allow wrapper to grow */
+    overflow: auto; /* Enable scrolling WITHIN the wrapper */
+    padding: var(--main-padding);
+    background-color: var(--bg-code-area);
+    min-height: 0; /* Important for flex item */
+}
+
+/* --- File Card Styling (within .contents-wrapper) --- */
+#file-content-container .contents-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--main-padding);
+    align-content: flex-start; /* Align cards to the top */
+}
+.file-card {
+    background-color: var(--bg-secondary); /* Default card background */
+    border: 1px solid var(--border-color-subtle);
+    border-radius: var(--border-radius-base);
+    box-shadow: 0 3px 7px rgba(0,0,0,0.4);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden; /* Card itself shouldn't scroll */
+    flex: 1 1 300px; /* Grow, shrink, base width */
+    min-width: 260px;
+    max-height: 350px; /* Limit card height */
+    transition: transform var(--transition-speed-fast) ease, box-shadow var(--transition-speed-fast) ease;
+}
+.file-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    background-color: var(--bg-tertiary);
+    border-bottom: 1px solid var(--border-color-subtle);
+    flex-shrink: 0;
+}
+.file-card-title {
+    font-weight: 500;
+    color: var(--text-primary);
+    font-size: 13px;
+    word-break: break-all;
+    padding-right: 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.file-card-content {
+    padding: 0; /* Remove padding, rely on <pre> padding */
+    overflow: auto; /* Content scrolls if needed */
+    flex-grow: 1;
+    background-color: var(--bg-code-area);
+    border-radius: 0 0 var(--border-radius-base) var(--border-radius-base);
+}
+.file-card-content pre {
+    margin: 0;
+    /* Color is handled by highlight.js theme */
+    /* padding: 12px 15px; Use highlight.js padding */
+    font-family: var(--font-mono);
+    font-size: 13px;
+    line-height: 1.6;
+    white-space: pre-wrap; /* Wrap long lines */
+    word-wrap: break-word;
+    min-height: 50px;
+    box-sizing: border-box; /* Include padding in width/height */
+}
+/* Highlight.js applies 'hljs' class to <pre> or <code> */
+.file-card-content pre > code.hljs {
+    padding: 12px 15px; /* Add padding to the highlighted code */
+    display: block; /* Ensure it takes block space */
+    border-radius: 0 0 var(--border-radius-base) var(--border-radius-base); /* Match card bottom radius */
+    /* Background comes from the theme CSS */
+}
+
+
+/* --- Text Styling (Tree & Output) --- */
+.output-text, .file-tree-text {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--text-secondary);
+    white-space: pre;
+    margin: 0;
+    padding: 10px 15px; /* Consistent padding */
+    word-wrap: break-word;
+}
+
+/* --- Scrollbars for INTERNAL wrappers --- */
+.tree-wrapper::-webkit-scrollbar,
+.contents-wrapper::-webkit-scrollbar,
+.output-wrapper::-webkit-scrollbar,
+.file-card-content::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+.tree-wrapper::-webkit-scrollbar-track,
+.contents-wrapper::-webkit-scrollbar-track,
+.output-wrapper::-webkit-scrollbar-track,
+.file-card-content::-webkit-scrollbar-track {
+    background: rgba(0,0,0,0.1);
+    border: none;
+    border-radius: 5px;
+}
+.tree-wrapper::-webkit-scrollbar-thumb,
+.contents-wrapper::-webkit-scrollbar-thumb,
+.output-wrapper::-webkit-scrollbar-thumb,
+.file-card-content::-webkit-scrollbar-thumb {
+    background-color: #555b61;
+    border-radius: 10px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+}
+.tree-wrapper::-webkit-scrollbar-thumb:hover,
+.contents-wrapper::-webkit-scrollbar-thumb:hover,
+.output-wrapper::-webkit-scrollbar-thumb:hover,
+.file-card-content::-webkit-scrollbar-thumb:hover {
+    background-color: #6a7075;
+}
+
+/* ---- Footer Styling ---- */
+footer {
+  flex-shrink: 0; /* Prevent footer from shrinking */
+  background-color: #2a2a2a;
+  color: #888;
+  text-align: center;
+  padding: 10px var(--main-padding);
+  font-size: 14px;
+  box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.5); /* Shadow above footer */
+  border-top: 1px solid #444; /* Subtle border above */
+  box-sizing: border-box;
+  user-select: none; /* Prevent text selection */
+}
+
+/* ---- End Footer Styling ---- */
+
+/* <-- end comment (src/css/main.css) */
