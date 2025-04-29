@@ -10,7 +10,7 @@ module.exports = {
   // Configuration pour Electron Packager (utilisé par Forge)
   packagerConfig: {
     asar: true,
-    icon: "./src/icons/zip-logo.ico",
+    icon: "./src/icons/zip_icon_rounded.ico", // Chemin vers l'icône de l'application
     name: "Zip Analyser", // Nom utilisé par Packager/Forge
 
     // --- Options ajoutées ---

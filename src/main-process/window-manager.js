@@ -22,7 +22,7 @@ function createWindow() {
     // Background color helps prevent white flash on load with frameless window
     backgroundColor: '#1f1f1f',
     show: false, // Don't show immediately, wait for ready-to-show
-    icon: '../icons/zip-logo.ico'
+    icon: '../icons/zip_icon_rounded.ico'
   });
 
   const indexPath = path.join(app.getAppPath(), 'src', 'index.html');
