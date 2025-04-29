@@ -6,16 +6,18 @@
 
 <p align="center">
   <!-- Tech Stack Badges -->
-  <a href="https://nodejs.org/"><img src="https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white" alt="NodeJS"></a>
+  <a href="https://nodejs.org/"><img src="https://img.shields.io/badge/Node.js-Installed-43853D?style=for-the-badge&logo=node.js&logoColor=white" alt="NodeJS"></a> <!-- Node version isn't fixed in package.json -->
   <a href="https://www.electronjs.org/"><img src="https://img.shields.io/badge/Electron-26.6.10-%2347848F.svg?style=for-the-badge&logo=electron&logoColor=white" alt="Electron"></a>
-  <a href="https://www.electronforge.io/"><img src="https://img.shields.io/badge/Electron%20Forge-7.0.0-%239B59B6.svg?style=for-the-badge&logo=electron&logoColor=white" alt="Electron Forge"></a>
+  <a href="https://www.electronforge.io/"><img src="https://img.shields.io/badge/Electron%20Forge-7.8.0-%239B59B6.svg?style=for-the-badge&logo=electron&logoColor=white" alt="Electron Forge"></a>
   <a href="https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/HTML5"><img src="https://img.shields.io/badge/HTML5-%23E34F26.svg?style=for-the-badge&logo=html5&logoColor=white" alt="HTML5"></a>
   <a href="https://developer.mozilla.org/en-US/docs/Web/CSS"><img src="https://img.shields.io/badge/CSS3-%231572B6.svg?style=for-the-badge&logo=css3&logoColor=white" alt="CSS3"></a>
   <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript"><img src="https://img.shields.io/badge/JavaScript-%23F7DF1E.svg?style=for-the-badge&logo=javascript&logoColor=black" alt="JavaScript"></a>
   <!-- Key Dependencies Badges -->
   <a href="https://www.npmjs.com/package/adm-zip"><img src="https://img.shields.io/badge/adm--zip-0.5.14-blue?style=for-the-badge" alt="adm-zip"></a>
-  <a href="https://highlightjs.org/"><img src="https://img.shields.io/badge/highlight.js-11.0.0-yellow?style=for-the-badge&logo=highlight.js&logoColor=black" alt="highlight.js"></a>
-  <a href="https://sweetalert2.github.io/"><img src="https://img.shields.io/badge/SweetAlert2-11.0.0-orange?style=for-the-badge" alt="SweetAlert2"></a>
+  <a href="https://www.npmjs.com/package/dotenv"><img src="https://img.shields.io/badge/dotenv-16.5.0-blue?style=for-the-badge" alt="dotenv"></a>
+  <a href="https://www.npmjs.com/package/electron-store"><img src="https://img.shields.io/badge/electron--store-7.0.3-blue?style=for-the-badge" alt="electron-store"></a>
+  <a href="https://highlightjs.org/"><img src="https://img.shields.io/badge/highlight.js-11.11.1-yellow?style=for-the-badge&logo=highlight.js&logoColor=black" alt="highlight.js"></a>
+  <a href="https://sweetalert2.github.io/"><img src="https://img.shields.io/badge/SweetAlert2-11.4.8-orange?style=for-the-badge" alt="SweetAlert2"></a>
   <!-- License & Release Badges -->
   <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge" alt="License: MIT"></a>
   <a href="https://github.com/iamplayerexe/zip_analyser/releases"><img src="https://img.shields.io/github/v/release/iamplayerexe/zip_analyser?include_prereleases&style=for-the-badge" alt="Latest Release"></a>
