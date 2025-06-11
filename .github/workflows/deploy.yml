@@ -8,6 +8,7 @@ on:
 jobs:
   build:
     strategy:
+      fail-fast: false # Set to false so all jobs run even if one fails
       matrix:
         # Define the platforms to build on
         os: [macos-latest, ubuntu-latest, windows-latest]
@@ -24,17 +25,25 @@ jobs:
         with:
           node-version: '18' # Use a specific Node.js version
 
+      # This step will only run on the ubuntu-latest job
+      - name: Install Linux Dependencies
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libgtk-3-dev libasound2 libxtst-dev libxss1 libnss3 xvfb
+
       - name: Install dependencies
         run: npm install
 
       - name: Build the application
-        run: npm run make
+        # For Linux, we run the build command inside a virtual display server (xvfb)
+        # This prevents errors related to the app not finding a screen.
+        run: |
+          if [ "${{ runner.os }}" == "Linux" ]; then
+            xvfb-run --auto-servernum npm run make
+          else
+            npm run make
+          fi
         env:
           # This token is required for publishing to GitHub Releases
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Upload Artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: installers-${{ matrix.os }}
-          path: out/make # The directory where Electron Forge places the installers
