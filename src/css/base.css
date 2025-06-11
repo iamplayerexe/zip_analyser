@@ -132,7 +132,7 @@ body.swal2-shown > [aria-hidden="true"] { filter: blur(2px) brightness(0.8); }
   padding: 10px 20px; font-size: 16px; color: #fff;
 }
 .swal2-actions button:hover:not(:disabled) {
-  background-color: var(--button-action-hover-bg);
+ 
   box-shadow: var(--button-action-hover-shadow);
   transform: scale(1.03);
 }
@@ -145,10 +145,10 @@ body.swal2-shown > [aria-hidden="true"] { filter: blur(2px) brightness(0.8); }
 /* Override specific Swal button colors */
 .swal2-confirm { background: var(--swal-primary-color) !important; color: #fff !important; }
 .swal2-confirm:hover { background: var(--swal-primary-hover) !important; }
-.swal2-cancel { background: var(--swal-cancel-color) !important; color: var(--text-primary) !important; } /* Use text-primary for cancel text */
+.swal2-cancel { background: var(--swal-cancel-color) !important; color: var(--text-primary) !important; }
 .swal2-cancel:hover { background: var(--swal-cancel-hover) !important; }
-.swal2-deny { background: var(--swal-deny-color) !important; color: #fff !important; }
-.swal2-deny:hover { background: var(--swal-deny-hover) !important; }
+.swal2-deny { background-color: var(--swal-deny-color); color: #fff; } /* CORRECTION : !important retiré */
+.swal2-deny:hover { background-color: var(--swal-deny-hover); }
 .swal2-input, .swal2-textarea { background-color: var(--swal-input-bg) !important; color: var(--text-primary) !important; border: 1px solid var(--swal-border-color) !important; border-radius: var(--border-radius-base) !important; box-shadow: inset 0 1px 2px rgba(0,0,0,0.2) !important; }
 .swal2-input:focus, .swal2-textarea:focus { border-color: var(--swal-primary-color) !important; box-shadow: 0 0 0 2px var(--swal-primary-color) !important; }
 .swal2-toast.swal2-popup { box-shadow: 0 3px 10px rgba(0,0,0,0.5) !important; border-radius: var(--border-radius-base) !important; }

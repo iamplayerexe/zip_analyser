@@ -1,6 +1,8 @@
+// <-- comment ( file)(src/main-process/zip-processor.js)
 // src/main-process/zip-processor.js
 const AdmZip = require('adm-zip');
 const fs = require('node:fs');
+const path = require('node:path'); // Ajout de path
 
 /**
  * Reads zip file entries and extracts text file data.
@@ -26,6 +28,9 @@ async function processZipData(filePath) {
             return false;
         }
 
+        // Liste des extensions d'images supportées
+        const imageExtensions = ['.png', '.jpg', '.jpeg', '.gif', '.bmp', '.ico', '.svg', '.webp'];
+
         // Use Promise.all for potentially faster async processing (though AdmZip is mostly sync)
         // In this case, it's more about structuring the data extraction cleanly.
         await Promise.all(zipEntries.map(async (entry) => {
@@ -44,8 +49,19 @@ async function processZipData(filePath) {
                     filesData[entryPath] = '[Error reading file data]';
                     return;
                  }
+                
+                const extension = path.extname(entryPath).toLowerCase();
 
-                if (isBinary(contentBuffer)) {
+                // NOUVELLE LOGIQUE : Vérifier si c'est une image
+                if (imageExtensions.includes(extension)) {
+                    const mimeType = `image/${extension.substring(1)}`;
+                    const base64Data = contentBuffer.toString('base64');
+                    // Renvoyer un objet pour les images au lieu d'une chaîne
+                    filesData[entryPath] = {
+                        isImage: true,
+                        content: `data:${mimeType};base64,${base64Data}`
+                    };
+                } else if (isBinary(contentBuffer)) {
                     filesData[entryPath] = '[Binary File - Content not displayed]';
                 } else {
                     try {
@@ -71,3 +87,4 @@ async function processZipData(filePath) {
 module.exports = {
     processZipData,
 };
+// <-- end comment (.js file)(src/main-process/zip-processor.js)

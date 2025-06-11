@@ -1,4 +1,4 @@
-// <-- comment (src/javascript/dom-elements.js)
+// <-- comment ( file)(src/javascript/dom-elements.js)
 // src/javascript/dom-elements.js
 
 // Titlebar elements
@@ -18,27 +18,29 @@ const viewSwitcherControls = document.getElementById('view-switcher-controls');
 const viewTreeButton = document.getElementById('view-tree-button');
 const viewContentButton = document.getElementById('view-content-button');
 const viewOutputButton = document.getElementById('view-output-button');
+const viewRecentButton = document.getElementById('view-recent-button');
 
 // Main Content Area & Panels
 const contentArea = document.getElementById('content-area');
 const fileTreeContainer = document.getElementById('file-tree-container');
 const fileContentContainer = document.getElementById('file-content-container');
 const outputContainer = document.getElementById('output-container');
+const recentFilesContainer = document.getElementById('recent-files-container');
 
-// --- ADD Initial Prompt ---
 const initialPrompt = document.getElementById('initial-prompt');
-// ------------------------
+const dropPlaceholder = document.getElementById('drop-placeholder'); // NOUVEAU
 
 // Wrappers within Panels
-// Use optional chaining in case containers aren't found initially
 const fileTreeWrapper = fileTreeContainer?.querySelector('.tree-wrapper');
 const fileContentWrapper = fileContentContainer?.querySelector('.contents-wrapper');
 const outputWrapper = outputContainer?.querySelector('.output-wrapper');
+const recentFilesWrapper = recentFilesContainer?.querySelector('.recent-files-wrapper');
 
 // Action Buttons within Panels
 const copyTreeButton = document.getElementById('copy-tree-button');
 const copyOutputButton = document.getElementById('copy-output-button');
 const exportOutputButton = document.getElementById('export-output-button');
+const clearHistoryButton = document.getElementById('clear-history-button');
 
 // Other UI Elements
 const processingIndicator = document.getElementById('processing-indicator');
@@ -51,16 +53,14 @@ module.exports = {
     minButton, maxButton, restoreButton, closeButton,
     // View Switcher
     viewSwitcherControls,
-    viewTreeButton, viewContentButton, viewOutputButton,
+    viewTreeButton, viewContentButton, viewOutputButton, viewRecentButton,
     // Main Content & Panels
-    contentArea, fileTreeContainer, fileContentContainer, outputContainer,
-    // --- ADD Initial Prompt to export ---
-    initialPrompt,
-    // -----------------------------------
-    fileTreeWrapper, fileContentWrapper, outputWrapper,
+    contentArea, fileTreeContainer, fileContentContainer, outputContainer, recentFilesContainer,
+    initialPrompt, dropPlaceholder, // NOUVEAU
+    fileTreeWrapper, fileContentWrapper, outputWrapper, recentFilesWrapper,
     // Action Buttons
-    copyTreeButton, copyOutputButton, exportOutputButton,
+    copyTreeButton, copyOutputButton, exportOutputButton, clearHistoryButton,
     // Other
     processingIndicator,
 };
-// <-- end comment (src/javascript/dom-elements.js)
+// <-- end comment (.js file)(src/javascript/dom-elements.js)
