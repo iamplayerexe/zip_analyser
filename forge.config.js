@@ -9,32 +9,33 @@ module.exports = {
   // This section configures the initial packaging of your app's source code.
   packagerConfig: {
     asar: true,
-    icon: "./src/icons/zip_icon_rounded", // Base name for icons (.ico for Win, .icns for Mac)
-    name: "Zip Analyser",                 // This is the user-facing application name for the folder structure
+    icon: "./src/icons/zip_icon_rounded",
+    // REMOVED: name: "Zip Analyser". This was the root cause of the error.
+    // By removing it, Forge will default to the name in your package.json ("zipanalyser"),
+    // which creates a clean directory path without spaces (e.g., "zipanalyser-linux-x64").
     appCopyright: `Copyright ©️ ${new Date().getFullYear()} Xutron`,
     win32metadata: {
       CompanyName: 'Xutron',
-      ProductName: 'Zip Analyser',
+      ProductName: 'Zip Analyser', // This is safe as it's just metadata for the .exe
       FileDescription: 'Application to analyze the contents of Zip files.',
     }
-    // REMOVED executableName FROM HERE to use the default from package.json
   },
 
   rebuildConfig: {},
 
-  // This section defines the final installers to be created from the packaged code.
+  // This section defines the final installers.
   makers: [
-    // Windows
     {
       name: '@electron-forge/maker-squirrel',
-      config: {},
+      config: {
+        // The squirrel maker correctly uses the 'ProductName' from win32metadata
+        // for the user-facing name, so no changes are needed here.
+      },
     },
-    // macOS - REMOVED the 'platforms' filter to simplify. It's handled by the build matrix.
     {
       name: '@electron-forge/maker-zip',
       platforms: ['darwin'],
     },
-    // Linux (Debian/Ubuntu)
     {
       name: '@electron-forge/maker-deb',
       config: {
@@ -42,12 +43,12 @@ module.exports = {
           maintainer: 'Exe',
           homepage: 'https://github.com/iamplayerexe/zip_analyser',
           icon: './src/icons/zip-logo.png',
+          // This productName is for user-facing metadata (e.g., in the software center)
+          // and is safe to keep. The executable name will correctly default to "zipanalyser".
           productName: 'Zip Analyser',
-          // REMOVED executableName FROM HERE to use the default
         }
       },
     },
-    // Linux (Fedora/CentOS)
     {
       name: '@electron-forge/maker-rpm',
       config: {
@@ -56,7 +57,6 @@ module.exports = {
           homepage: 'https://github.com/iamplayerexe/zip_analyser',
           icon: './src/icons/zip-logo.png',
           productName: 'Zip Analyser',
-          // REMOVED executableName FROM HERE to use the default
         }
       },
     },
