@@ -6,7 +6,7 @@
 
 <p align="center">
   <!-- Tech Stack Badges -->
-  <a href="https://nodejs.org/"><img src="https://img.shields.io/badge/Node.js-Installed-43853D?style=for-the-badge&logo=node.js&logoColor=white" alt="NodeJS"></a> <!-- Node version isn't fixed in package.json -->
+  <a href="https://nodejs.org/"><img src="https://img.shields.io/badge/Node.js-Installed-43853D?style=for-the-badge&logo=node.js&logoColor=white" alt="NodeJS"></a>
   <a href="https://www.electronjs.org/"><img src="https://img.shields.io/badge/Electron-26.6.10-%2347848F.svg?style=for-the-badge&logo=electron&logoColor=white" alt="Electron"></a>
   <a href="https://www.electronforge.io/"><img src="https://img.shields.io/badge/Electron%20Forge-7.8.0-%239B59B6.svg?style=for-the-badge&logo=electron&logoColor=white" alt="Electron Forge"></a>
   <a href="https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/HTML5"><img src="https://img.shields.io/badge/HTML5-%23E34F26.svg?style=for-the-badge&logo=html5&logoColor=white" alt="HTML5"></a>
@@ -23,7 +23,7 @@
   <a href="https://github.com/iamplayerexe/zip_analyser/releases"><img src="https://img.shields.io/github/v/release/iamplayerexe/zip_analyser?include_prereleases&style=for-the-badge" alt="Latest Release"></a>
 </p>
 
-> A simple desktop application built with Electron for quickly analyzing the contents of `.zip` archives. View file structure, inspect text files with syntax highlighting, and generate concatenated output without full extraction. Designed for Windows.
+> A powerful desktop utility for **Windows, macOS, and Linux**, designed to streamline your workflow with AI models. Zip Analyser instantly processes `.zip` archives, combining all text-based files into a single, clean output. This allows you to copy an entire project's context into an AI prompt in seconds, saving time and improving comprehension.
 
 ---
 
@@ -53,25 +53,26 @@
 
 ## ✨ Features Checklist
 
--   [x] 📂 **Zip Import:** Load `.zip` files via button or drag-and-drop (*Drag-and-drop not implemented yet, but planned*).
+-   [x] 🖥️ **Cross-Platform:** Native installers for Windows, macOS, and Linux.
+-   [x] 📂 **Zip Import:** Load `.zip` files via button or drag-and-drop.
 -   [x] 🌲 **Tree View:** Displays the hierarchical file and folder structure inside the zip.
--   [x] 📄 **Content View:** Shows content of text files within cards.
--   [x] ✨ **Syntax Highlighting:** Automatically highlights code syntax for common file types (JS, CSS, PY, HTML, etc.).
--   [x] 📝 **Concatenated Output:** Generates a single text output combining all readable text files, marked with file headers.
+-   [x] 📄 **Content View:** Shows content of text files and image previews within cards.
+-   [x] ✨ **Syntax Highlighting:** Automatically highlights code syntax for common file types.
+-   [x] 📝 **Concatenated Output:** Generates a single text output combining all readable text files, perfect for AI prompts.
 -   [x] 📋 **Copy Actions:** Buttons to copy the file tree, individual file content, or the full concatenated output.
--   [x] 💾 **Export:** Save the concatenated output to a `.txt` file.
+-   [x] 💾 **Export:** Save the concatenated output or individual files to your disk.
 -   [x] ✨ **Custom UI:** Custom title bar, navigation, and styling.
--   [x] 🔄 **Auto Updates:** (Windows Installer) Checks for updates via GitHub Releases on launch.
+-   [x] 🔄 **Smart Updates:** Seamless auto-updates for Windows & macOS; update notifications for Linux.
 
 ---
 
 ## 🎯 Why Choose Zip Analyser?
 
-> Quickly Peek Inside Zips Without Extracting Everything.
+> Supercharge Your AI Prompts.
 
-*   ✅ **Focus:** Designed for developers or users needing a quick look at code/text files within zips.
-*   ⚡ **Speed:** Faster than extracting large archives just to view a few text files.
-*   💻 **Convenience:** Syntax highlighting and concatenated output in one place.
+*   ✅ **AI-Ready Context:** Generate a single, comprehensive text file from your project's source code, perfect for pasting into large language models (LLMs).
+*   ⚡ **Efficiency:** Stop manually opening, copying, and pasting dozens of files. Go from a `.zip` to a complete prompt in just a few clicks.
+*   💻 **Convenience:** Syntax highlighting, image previews, and concatenated output all in one cross-platform application.
 
 ---
 
@@ -85,34 +86,65 @@
 
 ---
 
-## 📦 Key Dependencies
-
-*   **`electron` (v26.6.10)**: (Dev) Core framework.
-*   **`@electron-forge/cli` (v7.x)**: (Dev) Build tools.
-*   **`adm-zip` (v0.5.x)**: Reading and processing zip files.
-*   **`highlight.js` (v11.x)**: Syntax highlighting library.
-*   **`sweetalert2` (v11.x)**: Pop-up dialogs and notifications.
-
----
-
-## 🚀 Getting Started (Windows Only)
+## 🚀 Getting Started
 
 1.  Go to the **[Releases Page](https://github.com/iamplayerexe/zip_analyser/releases)**.
-2.  Download the latest `Zip-Analyser-x.y.z-Setup.exe` (or `Setup.exe`) file from the **Assets** section.
-3.  Run the installer.
-    *   ⚠️ **Windows SmartScreen/Antivirus:** If the app isn't code-signed, you might see warnings ("Unknown Publisher"). Click "More info" -> "Run anyway".
-4.  Launch **Zip Analyser**! The app will check for updates automatically.
+2.  Download the correct installer for your operating system from the **Assets** section.
+
+<details>
+  <summary><strong>🪟 Windows Installation</strong></summary>
+  <br/>
+  <ol>
+    <li>Download the file ending in <code>-Setup.exe</code>.</li>
+    <li>Run the installer.</li>
+    <li>⚠️ <strong>Windows SmartScreen:</strong> If a warning appears, click "More info" → "Run anyway". This is because the application is not code-signed.</li>
+    <li>Launch <strong>Zip Analyser</strong>! The app will check for updates automatically.</li>
+  </ol>
+</details>
+
+<details>
+  <summary><strong>🍎 macOS Installation</strong></summary>
+  <br/>
+  <ol>
+    <li>Download the file ending in <code>.zip</code>.</li>
+    <li>Unzip the file to get <code>Zip Analyser.app</code>.</li>
+    <li>Drag <code>Zip Analyser.app</code> into your <strong>/Applications</strong> folder.</li>
+    <li>⚠️ <strong>First Launch:</strong> You must <strong>right-click</strong> the app icon and select <strong>"Open"</strong>. A warning will appear; click the "Open" button on the dialog to proceed. You only need to do this once.</li>
+    <li>Launch the app normally from then on! It will update automatically.</li>
+  </ol>
+</details>
+
+<details>
+  <summary><strong>🐧 Linux Installation</strong></summary>
+  <br/>
+  <ol>
+    <li>Download the appropriate package for your distribution:
+        <ul>
+            <li><code>.deb</code> for Debian, Ubuntu, Mint, etc.</li>
+            <li><code>.rpm</code> for Fedora, CentOS, etc.</li>
+        </ul>
+    </li>
+    <li><strong>To Install (GUI):</strong> Double-click the downloaded file to open it with your system's software installer.</li>
+    <li><strong>To Install (Terminal):</strong>
+        <ul>
+            <li>For <code>.deb</code>: <code>sudo dpkg -i file-name.deb</code> (then <code>sudo apt-get install -f</code> if needed).</li>
+            <li>For <code>.rpm</code>: <code>sudo dnf install file-name.rpm</code>.</li>
+        </ul>
+    </li>
+    <li>Launch the app. It will notify you when a new version is available for manual download.</li>
+  </ol>
+</details>
 
 ---
 
 ## 📖 How to Use
 
 1.  🖱️ **Launch:** Open the app.
-2.  ➕ **Import Zip:** Click the **`+`** button in the top navigation bar and select a `.zip` file.
+2.  ➕ **Import Zip:** Click the **`+`** button or drag and drop a `.zip` file onto the window.
 3.  🔎 **Explore Views:** Use the **"File Tree"**, **"File Contents"**, and **"Text Output"** buttons to switch views.
 4.  📋 **Copy Data:**
     *   *File Tree:* Use the "Copy" button in the File Tree panel header.
-    *   *File Content:* Use the "Copy" button on individual file cards in the File Contents view.
+    *   *File Content:* Use the "Copy" button on individual file cards.
     *   *All Output:* Use the "Copy" button in the Text Output panel header.
 5.  💾 **Export Output:** Click the **"Export"** button in the Text Output view to save all concatenated text to a file.
 
