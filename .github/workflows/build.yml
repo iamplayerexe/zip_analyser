@@ -7,6 +7,12 @@ on:
 
 jobs:
   build:
+    # --- ADD THIS PERMISSIONS BLOCK ---
+    # This grants the workflow the necessary permissions to create a release
+    # and upload assets to it.
+    permissions:
+      contents: write
+
     strategy:
       fail-fast: false
       matrix:
@@ -15,7 +21,6 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     env:
-      # The token MUST be passed for the publish command to work
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
@@ -36,10 +41,7 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      # --- CHANGE THE BUILD COMMAND TO 'publish' ---
       - name: Build and Publish
-        # We can now use a single step because the logic is the same for all OS
-        # The xvfb-run command for Linux is still needed
         run: |
           if [ "${{ runner.os }}" == "Linux" ]; then
             xvfb-run --auto-servernum npm run publish
