@@ -4,86 +4,73 @@ require('dotenv').config();
 
 const { FusesPlugin } = require('@electron-forge/plugin-fuses');
 const { FuseV1Options, FuseVersion } = require('@electron/fuses');
-const packageJson = require('./package.json');
 
 module.exports = {
-  // Configuration pour Electron Packager (utilisé par Forge)
+  // This section configures the initial packaging of your app's source code.
   packagerConfig: {
     asar: true,
-    // Set the base path for the icon. Electron Forge will automatically use
-    // the correct extension for each platform (.ico for Windows, .icns for macOS).
-    icon: "./src/icons/zip_icon_rounded", // Assumes zip_icon_rounded.ico and zip_icon_rounded.icns exist
-    name: "Zip Analyser", // Nom utilisé par Packager/Forge
-
-    // --- Options ajoutées ---
-    executableName: 'ZipAnalyserApp', // Nom du fichier .exe généré
-    appCopyright: `Copyright ©️ ${new Date().getFullYear()} Xutron`, // Texte de copyright intégré
-    win32metadata: { // Métadonnées spécifiques pour l'exécutable Windows
-      CompanyName: 'Xutron', // Nom de l'entreprise (peut être votre nom)
-      ProductName: 'Zip Analyser', // Nom du produit affiché dans les propriétés Windows
-      FileDescription: 'Application pour analyser le contenu des fichiers Zip.', // Description du fichier
-      OriginalFilename: 'ZipAnalyserApp.exe' // Doit correspondre à executableName
+    icon: "./src/icons/zip_icon_rounded", // Base name for icons (.ico for Win, .icns for Mac)
+    name: "Zip Analyser",                 // The user-facing application name
+    executableName: "ZipAnalyserApp",      // **Crucial:** The name of the final binary file (e.g., ZipAnalyserApp.exe)
+    appCopyright: `Copyright ©️ ${new Date().getFullYear()} Xutron`,
+    win32metadata: {
+      CompanyName: 'Xutron',
+      ProductName: 'Zip Analyser',
+      FileDescription: 'Application to analyze the contents of Zip files.',
+      OriginalFilename: 'ZipAnalyserApp.exe'
     }
-    // --- Fin des options ajoutées ---
   },
 
   rebuildConfig: {},
 
-  // Configuration des différents types d'installateurs/packages
+  // This section defines the final installers to be created from the packaged code.
   makers: [
-    // Windows Maker
+    // Windows
     {
       name: '@electron-forge/maker-squirrel',
-      config: {
-        // --- CONFIGURER LA SIGNATURE ICI ---
-        // certificateFile: process.env.WINDOWS_CERTIFICATE_FILE,
-        // certificatePassword: process.env.WINDOWS_CERTIFICATE_PASSWORD,
-      },
+      config: {},
     },
-    // macOS Maker (using ZIP for auto-updates)
+    // macOS
     {
       name: '@electron-forge/maker-zip',
-      platforms: ['darwin'], // 'darwin' is the OS name for macOS
+      platforms: ['darwin'],
     },
-    // Linux Debian/Ubuntu Maker
+    // Linux (Debian/Ubuntu)
     {
       name: '@electron-forge/maker-deb',
       config: {
         options: {
-            maintainer: 'Xutron',
-            homepage: 'https://github.com/iamplayerexe/zip_analyser',
-            icon: './src/icons/zip-logo.png', // Use a PNG for Linux
-            description: 'A simple desktop application for quickly analyzing the contents of .zip archives.',
-            productName: 'Zip Analyser',
-            // --- ADD THIS LINE ---
-            executableName: 'ZipAnalyserApp'
+          maintainer: 'Exe',
+          homepage: 'https://github.com/iamplayerexe/zip_analyser',
+          icon: './src/icons/zip-logo.png',
+          productName: 'Zip Analyser',
+          // **Crucial:** Tell the .deb maker the exact name of the binary to look for.
+          executableName: 'ZipAnalyserApp'
         }
       },
     },
-    // Linux Fedora/CentOS Maker
+    // Linux (Fedora/CentOS)
     {
       name: '@electron-forge/maker-rpm',
       config: {
         options: {
-            maintainer: 'Xutron',
-            homepage: 'https://github.com/iamplayerexe/zip_analyser',
-            icon: './src/icons/zip-logo.png', // Use a PNG for Linux
-            description: 'A simple desktop application for quickly analyzing the contents of .zip archives.',
-            productName: 'Zip Analyser',
-            // --- AND ADD THIS LINE ---
-            executableName: 'ZipAnalyserApp'
+          maintainer: 'Exe',
+          homepage: 'https://github.com/iamplayerexe/zip_analyser',
+          icon: './src/icons/zip-logo.png',
+          productName: 'Zip Analyser',
+          // **Crucial:** Tell the .rpm maker the exact name of the binary to look for.
+          executableName: 'ZipAnalyserApp'
         }
       },
     },
   ],
 
-  // Configuration des plugins Electron Forge
   plugins: [
     {
       name: '@electron-forge/plugin-auto-unpack-natives',
       config: {},
     },
-    new FusesPlugin({ // Configuration de sécurité via Electron Fuses
+    new FusesPlugin({
       version: FuseVersion.V1,
       [FuseV1Options.RunAsNode]: false,
       [FuseV1Options.EnableCookieEncryption]: true,
@@ -94,7 +81,6 @@ module.exports = {
     }),
   ],
 
-  // Configuration de la publication automatique sur GitHub Releases
   publishers: [
     {
       name: '@electron-forge/publisher-github',
@@ -103,9 +89,9 @@ module.exports = {
           owner: 'iamplayerexe',
           name: 'zip_analyser'
         },
-        authToken: process.env.GITHUB_TOKEN, // Jeton d'authentification GitHub
-        prerelease: false, // Marquer comme pré-version ?
-        draft: false      // Créer comme brouillon ?
+        authToken: process.env.GITHUB_TOKEN,
+        prerelease: false,
+        draft: false
       }
     }
   ]
