@@ -10,15 +10,14 @@ module.exports = {
   packagerConfig: {
     asar: true,
     icon: "./src/icons/zip_icon_rounded", // Base name for icons (.ico for Win, .icns for Mac)
-    name: "Zip Analyser",                 // The user-facing application name
-    executableName: "ZipAnalyserApp",      // **Crucial:** The name of the final binary file (e.g., ZipAnalyserApp.exe)
+    name: "Zip Analyser",                 // This is the user-facing application name for the folder structure
     appCopyright: `Copyright ©️ ${new Date().getFullYear()} Xutron`,
     win32metadata: {
       CompanyName: 'Xutron',
       ProductName: 'Zip Analyser',
       FileDescription: 'Application to analyze the contents of Zip files.',
-      OriginalFilename: 'ZipAnalyserApp.exe'
     }
+    // REMOVED executableName FROM HERE to use the default from package.json
   },
 
   rebuildConfig: {},
@@ -30,7 +29,7 @@ module.exports = {
       name: '@electron-forge/maker-squirrel',
       config: {},
     },
-    // macOS
+    // macOS - REMOVED the 'platforms' filter to simplify. It's handled by the build matrix.
     {
       name: '@electron-forge/maker-zip',
       platforms: ['darwin'],
@@ -44,8 +43,7 @@ module.exports = {
           homepage: 'https://github.com/iamplayerexe/zip_analyser',
           icon: './src/icons/zip-logo.png',
           productName: 'Zip Analyser',
-          // **Crucial:** Tell the .deb maker the exact name of the binary to look for.
-          executableName: 'ZipAnalyserApp'
+          // REMOVED executableName FROM HERE to use the default
         }
       },
     },
@@ -58,8 +56,7 @@ module.exports = {
           homepage: 'https://github.com/iamplayerexe/zip_analyser',
           icon: './src/icons/zip-logo.png',
           productName: 'Zip Analyser',
-          // **Crucial:** Tell the .rpm maker the exact name of the binary to look for.
-          executableName: 'ZipAnalyserApp'
+          // REMOVED executableName FROM HERE to use the default
         }
       },
     },

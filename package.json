@@ -1,6 +1,6 @@
 {
-  "name": "zip-analyser",
-  "version": "1.2.0",
+  "name": "zipanalyser",
+  "version": "1.1.3",
   "author": "Exe",
   "description": "Analyzes the contents of a zip file.",
   "main": "main.js",
