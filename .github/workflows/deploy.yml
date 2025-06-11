@@ -1,0 +1,40 @@
+name: Build & Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*' # This workflow runs only when you push a new tag (e.g., v1.2.1)
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        # Define the platforms to build on
+        os: [macos-latest, ubuntu-latest, windows-latest]
+    
+    # Use the virtual machine defined in the matrix
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18' # Use a specific Node.js version
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build the application
+        run: npm run make
+        env:
+          # This token is required for publishing to GitHub Releases
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: installers-${{ matrix.os }}
+          path: out/make # The directory where Electron Forge places the installers
