@@ -55,6 +55,8 @@ module.exports = {
             icon: './src/icons/zip-logo.png', // Use a PNG for Linux
             description: 'A simple desktop application for quickly analyzing the contents of .zip archives.',
             productName: 'Zip Analyser',
+            // --- ADD THIS LINE ---
+            executableName: 'ZipAnalyserApp'
         }
       },
     },
@@ -68,6 +70,8 @@ module.exports = {
             icon: './src/icons/zip-logo.png', // Use a PNG for Linux
             description: 'A simple desktop application for quickly analyzing the contents of .zip archives.',
             productName: 'Zip Analyser',
+            // --- AND ADD THIS LINE ---
+            executableName: 'ZipAnalyserApp'
         }
       },
     },
