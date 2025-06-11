@@ -88,6 +88,8 @@
 
 ## 🚀 Getting Started
 
+> **Note:** We recommend downloading version **v1.2.0 or newer**. This is the first version with stable installers for Windows, macOS, and Linux.
+
 1.  Go to the **[Releases Page](https://github.com/iamplayerexe/zip_analyser/releases)**.
 2.  Download the correct installer for your operating system from the **Assets** section.
 
