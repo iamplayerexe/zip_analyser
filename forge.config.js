@@ -10,7 +10,9 @@ module.exports = {
   // Configuration pour Electron Packager (utilisé par Forge)
   packagerConfig: {
     asar: true,
-    icon: "./src/icons/zip_icon_rounded.ico", // Chemin vers l'icône de l'application
+    // Set the base path for the icon. Electron Forge will automatically use
+    // the correct extension for each platform (.ico for Windows, .icns for macOS).
+    icon: "./src/icons/zip_icon_rounded", // Assumes zip_icon_rounded.ico and zip_icon_rounded.icns exist
     name: "Zip Analyser", // Nom utilisé par Packager/Forge
 
     // --- Options ajoutées ---
@@ -29,30 +31,45 @@ module.exports = {
 
   // Configuration des différents types d'installateurs/packages
   makers: [
+    // Windows Maker
     {
       name: '@electron-forge/maker-squirrel',
       config: {
         // --- CONFIGURER LA SIGNATURE ICI ---
         // certificateFile: process.env.WINDOWS_CERTIFICATE_FILE,
         // certificatePassword: process.env.WINDOWS_CERTIFICATE_PASSWORD,
-        // --- Options spécifiques à Squirrel (installeur) ---
-        // Note: setupExe/setupIcon personnalisent l'installeur lui-même,
-        // tandis que executableName/icon dans packagerConfig personnalisent l'app installée.
-        // setupExe: `${packageJson.name}-${packageJson.version}-setup.exe`,
-        // setupIcon: './src/icons/zip-logo.ico',
       },
     },
+    // macOS Maker (using ZIP for auto-updates)
     {
       name: '@electron-forge/maker-zip',
-      platforms: ['darwin'], // Pour macOS
+      platforms: ['darwin'], // 'darwin' is the OS name for macOS
     },
+    // Linux Debian/Ubuntu Maker
     {
       name: '@electron-forge/maker-deb',
-      config: {}, // Pour Linux Debian/Ubuntu
+      config: {
+        options: {
+            maintainer: 'Xutron',
+            homepage: 'https://github.com/iamplayerexe/zip_analyser',
+            icon: './src/icons/zip-logo.png', // Use a PNG for Linux
+            description: 'A simple desktop application for quickly analyzing the contents of .zip archives.',
+            productName: 'Zip Analyser',
+        }
+      },
     },
+    // Linux Fedora/CentOS Maker
     {
       name: '@electron-forge/maker-rpm',
-      config: {}, // Pour Linux Fedora/CentOS
+      config: {
+        options: {
+            maintainer: 'Xutron',
+            homepage: 'https://github.com/iamplayerexe/zip_analyser',
+            icon: './src/icons/zip-logo.png', // Use a PNG for Linux
+            description: 'A simple desktop application for quickly analyzing the contents of .zip archives.',
+            productName: 'Zip Analyser',
+        }
+      },
     },
   ],
 
