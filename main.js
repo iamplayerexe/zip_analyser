@@ -1,26 +1,19 @@
-// main.js (Root Entry Point for Main Process)
-
-// Import necessary Electron modules
-const { app, autoUpdater, dialog, BrowserWindow, shell } = require('electron'); // Add shell
-const https = require('https'); // Add https for Linux update check
-// Import Node.js path module for handling file paths
+const { app, autoUpdater, dialog, BrowserWindow, shell } = require('electron');
+const https = require('https');
 const path = require('path');
 
-// Import custom modules for window management and IPC handling
 const { createWindow, getMainWindow } = require('./src/main-process/window-manager');
 const { initializeIpcHandlers } = require('./src/main-process/ipc-handlers');
 
-// Handle Squirrel.Windows install/update events
-// This is required for Squirrel to manage shortcuts etc. during install/uninstall
-// It quits the app immediately if these command-line flags are present.
 if (require('electron-squirrel-startup')) {
   app.quit();
 }
 
 // --- Auto Update Setup ---
 
+// UPDATED: The release assets are in the private repo, so all checks must point there.
 const owner = 'iamplayerexe';
-const repo = 'zip_analyser';
+const repo = 'zip_analyser_app'; // CRITICAL: Point to your PRIVATE releases repository
 const repoUrl = `https://github.com/${owner}/${repo}`;
 
 // Function for Windows and macOS auto-updates
@@ -106,7 +99,6 @@ function checkForUpdatesLinux() {
                 const latestVersion = release.tag_name.startsWith('v') ? release.tag_name.substring(1) : release.tag_name;
                 const currentVersion = app.getVersion();
 
-                // Simple version comparison (can be improved with semver library if needed)
                 if (latestVersion > currentVersion) {
                     console.log(`New version available on Linux: ${latestVersion}`);
                     getMainWindow()?.webContents.send('update-message', `New version ${latestVersion} is available!`);
@@ -156,7 +148,7 @@ function checkForUpdates() {
     switch (process.platform) {
         case 'win32':
         case 'darwin': // macOS
-            initializeAutoUpdater(); // Initialize listeners first
+            initializeAutoUpdater();
             autoUpdater.checkForUpdates();
             break;
         case 'linux':
@@ -167,33 +159,22 @@ function checkForUpdates() {
     }
 }
 
-// --- App Lifecycle Events ---
-
-// This method will be called when Electron has finished initialization.
+// App Lifecycle Events
 app.whenReady().then(() => {
   console.log("Main Process: App ready.");
-  // Initialize IPC handlers for communication between main and renderer processes.
   initializeIpcHandlers();
-  // Create the main application window.
   const mainWindow = createWindow();
 
-  // Check for updates after the window has finished loading its content.
   if (mainWindow) {
-      // Listen for the 'did-finish-load' event on the window's webContents.
       mainWindow.webContents.once('did-finish-load', () => {
           console.log('Window finished loading. Scheduling update check.');
-          // Use setTimeout to delay the check slightly, ensuring the app is fully settled.
-          // A 5-second delay is usually sufficient.
           setTimeout(checkForUpdates, 5000);
       });
   } else {
-      // Fallback if the window object wasn't immediately available (should be rare).
        console.warn("Main window not immediately available after ready. Scheduling update check with longer delay.");
-      // Use a longer delay as a fallback.
       setTimeout(checkForUpdates, 15000);
   }
 
-  // macOS specific: Re-create window if none are open when dock icon is clicked.
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
       createWindow();
@@ -201,12 +182,10 @@ app.whenReady().then(() => {
   });
 });
 
-// Quit when all windows are closed, except on macOS ('darwin').
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     app.quit();
   }
 });
 
-// Initial log message when the main process starts.
 console.log("Main Process: Initializing...");

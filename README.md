@@ -108,10 +108,10 @@
   <summary><strong>🍎 macOS Installation</strong></summary>
   <br/>
   <ol>
-    <li>Download the file ending in <code>.zip</code>.</li>
-    <li>Unzip the file to get <code>Zip Analyser.app</code>.</li>
-    <li>Drag <code>Zip Analyser.app</code> into your <strong>/Applications</strong> folder.</li>
-    <li>⚠️ <strong>First Launch:</strong> You must <strong>right-click</strong> the app icon and select <strong>"Open"</strong>. A warning will appear; click the "Open" button on the dialog to proceed. You only need to do this once.</li>
+    <li>Download the file ending in <code>.dmg</code>.</li>
+    <li>Open the <code>.dmg</code> file.</li>
+    <li>Drag the <strong>Zip Analyser</strong> app icon into your <strong>Applications</strong> folder shortcut.</li>
+    <li>⚠️ <strong>First Launch:</strong> You may need to <strong>right-click</strong> the app icon and select <strong>"Open"</strong>. If a warning appears, click the "Open" button on the dialog to proceed. You only need to do this once.</li>
     <li>Launch the app normally from then on! It will update automatically.</li>
   </ol>
 </details>
@@ -129,7 +129,7 @@
     <li><strong>To Install (GUI):</strong> Double-click the downloaded file to open it with your system's software installer.</li>
     <li><strong>To Install (Terminal):</strong>
         <ul>
-            <li>For <code>.deb</code>: <code>sudo dpkg -i file-name.deb</code> (then <code>sudo apt-get install -f</code> if needed).</li>
+            <li>For <code>.deb</code>: <code>sudo dpkg -i file-name.deb</code> (then `sudo apt-get install -f` if needed).</li>
             <li>For <code>.rpm</code>: <code>sudo dnf install file-name.rpm</code>.</li>
         </ul>
     </li>
@@ -161,13 +161,13 @@ Want to contribute code? (Requires Node.js & npm)
 
 1.  **Fork** the repository.
 2.  **Clone** your fork locally (`git clone ...`).
-3.  **Install Dependencies** (`cd zip_analyser && npm install`).
+3.  **Install Dependencies** (`npm install`).
 4.  **Create Branch** (`git checkout -b feature/YourAmazingFeature`).
 5.  **Make Changes**.
 6.  **Test Locally** (`npm start`).
 7.  **Commit** (`git commit -m 'feat: Add some amazing feature'`).
 8.  **Push** (`git push origin feature/YourAmazingFeature`).
-9.  **Open Pull Request** back to `iamplayerexe/zip_analyser:main`.
+9.  **Open a Pull Request** back to `iamplayerexe/zip_analyser:main`.
 
 ---
 
