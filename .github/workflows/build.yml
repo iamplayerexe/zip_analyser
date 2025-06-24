@@ -30,7 +30,7 @@ jobs:
           
       - name: Get App Info from package.json
         id: package
-        uses: jaywcjlove/github-action-package@v3.0.1
+        uses: jaywcjlove/github-action-package@v4 # <-- THIS LINE IS THE FIX
 
       - name: Install Linux Dependencies
         if: runner.os == 'Linux'
@@ -59,7 +59,7 @@ jobs:
           APP_NAME: ${{ steps.package.outputs.name }}
         shell: bash
         run: |
-          PRIVATE_REPO="iamplayerexe/zip_analyser_app"
+          PRIVATE_REPO="iamplayerexe/${APP_NAME}_app"
           
           echo "Preparing to release version ${TAG} of ${APP_NAME} to ${PRIVATE_REPO}"
 
