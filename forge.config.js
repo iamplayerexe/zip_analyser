@@ -1,3 +1,4 @@
+// forge.config.js
 require('dotenv').config();
 
 const { FusesPlugin } = require('@electron-forge/plugin-fuses');
@@ -18,48 +19,25 @@ module.exports = {
   rebuildConfig: {},
 
   makers: [
+    // Create a zip for Windows containing the .exe and support files
     {
-      // Windows installer
-      name: '@electron-forge/maker-squirrel',
-      config: {
-        name: "ZipAnalyser", // A name without spaces is safer
-        setupIcon: './src/icons/zip_icon_rounded.ico',
-      },
+      name: '@electron-forge/maker-zip',
+      platforms: ['win32'],
     },
+    // Create a DMG for macOS
     {
-      // UPDATED: Changed from maker-zip to maker-dmg for a better macOS experience
       name: '@electron-forge/maker-dmg',
+      platforms: ['darwin'],
       config: {
-        icon: './src/icons/zip_icon_rounded.icns',
-        name: 'Zip Analyser'
+        name: 'Zip Analyser',
+        icon: './src/icons/zip_icon_rounded.icns'
       }
     },
+    // Create a zip for Linux
     {
-      // Linux .deb installer
-      name: '@electron-forge/maker-deb',
-      config: {
-        options: {
-          maintainer: 'Xutron',
-          homepage: 'https://github.com/iamplayerexe/zip_analyser',
-          icon: './src/icons/zip-logo.png',
-          productName: 'Zip Analyser',
-          license: 'MIT'
-        }
-      },
-    },
-    {
-      // Linux .rpm installer
-      name: '@electron-forge/maker-rpm',
-      config: {
-        options: {
-          maintainer: 'Xutron',
-          homepage: 'https://github.com/iamplayerexe/zip_analyser',
-          icon: './src/icons/zip-logo.png',
-          productName: 'Zip Analyser',
-          license: 'MIT'
-        }
-      },
-    },
+      name: '@electron-forge/maker-zip',
+      platforms: ['linux'],
+    }
   ],
 
   plugins: [
@@ -77,20 +55,4 @@ module.exports = {
       [FuseV1Options.OnlyLoadAppFromAsar]: true,
     }),
   ],
-
-  publishers: [
-    {
-      name: '@electron-forge/publisher-github',
-      config: {
-        // UPDATED: This now points to your PRIVATE repository for releases
-        repository: {
-          owner: 'iamplayerexe',
-          name: 'zip_analyser_app' // IMPORTANT: Change if your private repo has a different name
-        },
-        authToken: process.env.GITHUB_TOKEN, // This will be provided by the workflow secret
-        prerelease: false,
-        draft: false
-      }
-    }
-  ]
 };
