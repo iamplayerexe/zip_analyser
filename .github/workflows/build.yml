@@ -30,7 +30,7 @@ jobs:
           
       - name: Get App Info from package.json
         id: package
-        uses: jaywcjlove/github-action-package@v4 # <-- THIS LINE IS THE FIX
+        uses: jaywcjlove/github-action-package@v2.0.0 # <-- CORRECTED to the latest official release version
 
       - name: Install Linux Dependencies
         if: runner.os == 'Linux'
