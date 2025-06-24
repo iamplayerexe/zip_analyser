@@ -30,7 +30,7 @@ jobs:
           
       - name: Get App Info from package.json
         id: package
-        uses: jaywcjlove/github-action-package@v2.0.0 # <-- CORRECTED to the latest official release version
+        uses: jaywcjlove/github-action-package@v2.0.0
 
       - name: Install Linux Dependencies
         if: runner.os == 'Linux'
@@ -68,6 +68,7 @@ jobs:
 
           # Upload all generated .zip and .dmg files from the 'out/make' directory
           echo "Uploading assets..."
-          gh release upload "${TAG}" --repo "${PRIVATE_REPO}" --clobber out/make/**/*.{zip,dmg}
+          # --- THIS IS THE FIX: The file path is now in quotes ---
+          gh release upload "${TAG}" --repo "${PRIVATE_REPO}" --clobber "out/make/**/*.{zip,dmg}"
 
           echo "Release process complete."
