@@ -1,17 +1,9 @@
-// <-- comment ( file)(src/javascript/dom-elements.js)
 // src/javascript/dom-elements.js
 
-// Titlebar elements
-const titlebar = document.getElementById('titlebar');
+// App Bar
 const navbarTitle = document.getElementById('navbar-title');
 const selectZipButtonNav = document.getElementById('select-zip-button-nav');
 const fileInput = document.getElementById('file-input');
-
-// Window Controls
-const minButton = document.getElementById('min-button');
-const maxButton = document.getElementById('max-button');
-const restoreButton = document.getElementById('restore-button');
-const closeButton = document.getElementById('close-button');
 
 // View Switcher Controls
 const viewSwitcherControls = document.getElementById('view-switcher-controls');
@@ -28,9 +20,9 @@ const outputContainer = document.getElementById('output-container');
 const recentFilesContainer = document.getElementById('recent-files-container');
 
 const initialPrompt = document.getElementById('initial-prompt');
-const dropPlaceholder = document.getElementById('drop-placeholder'); // NOUVEAU
+const dropPlaceholder = document.getElementById('drop-placeholder');
 
-// Wrappers within Panels
+// MODIFIED: Selectors are now more specific, targeting wrappers inside their panels
 const fileTreeWrapper = fileTreeContainer?.querySelector('.tree-wrapper');
 const fileContentWrapper = fileContentContainer?.querySelector('.contents-wrapper');
 const outputWrapper = outputContainer?.querySelector('.output-wrapper');
@@ -45,22 +37,18 @@ const clearHistoryButton = document.getElementById('clear-history-button');
 // Other UI Elements
 const processingIndicator = document.getElementById('processing-indicator');
 
-
 module.exports = {
-    // Titlebar
-    titlebar, navbarTitle, selectZipButtonNav, fileInput,
-    // Window Controls
-    minButton, maxButton, restoreButton, closeButton,
+    // App Bar
+    navbarTitle, selectZipButtonNav, fileInput,
     // View Switcher
     viewSwitcherControls,
     viewTreeButton, viewContentButton, viewOutputButton, viewRecentButton,
     // Main Content & Panels
     contentArea, fileTreeContainer, fileContentContainer, outputContainer, recentFilesContainer,
-    initialPrompt, dropPlaceholder, // NOUVEAU
+    initialPrompt, dropPlaceholder,
     fileTreeWrapper, fileContentWrapper, outputWrapper, recentFilesWrapper,
     // Action Buttons
     copyTreeButton, copyOutputButton, exportOutputButton, clearHistoryButton,
     // Other
     processingIndicator,
 };
-// <-- end comment (.js file)(src/javascript/dom-elements.js)

@@ -1,54 +1,66 @@
-// <-- comment ( file)(renderer.js)
-// renderer.js (Root Renderer Process Logic - Main Entry Point)
-
-// --- Core Modules ---
-const { setupWindowControls } = require('./javascript/window-controls.js');
-const { resetUI } = require('./javascript/utils.js');
-
-// --- New Rendering Modules ---
+// renderer.js
+const { ipcRenderer } = require('electron');
 const { initializeAppEventListeners } = require('./rendering/event-listeners.js');
 const { updateAppTitleWithVersion } = require('./rendering/view-renderer.js');
 const { initializeHistory } = require('./rendering/history-manager.js');
+const { resetUI } = require('./javascript/utils.js');
 
-
-// --- Initialization Code ---
 document.addEventListener('DOMContentLoaded', () => {
-    console.log("Renderer: DOM Content Loaded.");
+    // --- Element Gathering ---
+    const elements = {
+        loadingScreen: document.getElementById('loading-screen'),
+        themeToggle: document.getElementById('theme-toggle'),
+        minButton: document.getElementById('min-button'),
+        maxButton: document.getElementById('max-button'),
+        restoreButton: document.getElementById('restore-button'),
+        closeButton: document.getElementById('close-button'),
+    };
 
-    // 1. Setup OS-like window controls (min, max, close)
-    try {
-        setupWindowControls();
-    } catch (err) {
-        console.error("Error setting up window controls:", err);
-    }
+    // --- Theme Setup ---
+    const applyTheme = (theme) => {
+        document.documentElement.setAttribute('data-theme', theme);
+        localStorage.setItem('theme', theme);
+    };
+    const savedTheme = localStorage.getItem('theme');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    applyTheme(savedTheme || (prefersDark ? 'dark' : 'light'));
 
-    // 2. Setup all application-specific event listeners (clicks, drag-drop, etc.)
-    try {
-        initializeAppEventListeners();
-    } catch(err) {
-        console.error("Error setting up app event listeners:", err);
-    }
+    elements.themeToggle.addEventListener('click', () => {
+        const currentTheme = document.documentElement.getAttribute('data-theme');
+        applyTheme(currentTheme === 'dark' ? 'light' : 'dark');
+    });
+
+    // --- Window Controls Setup ---
+    elements.minButton?.addEventListener('click', () => ipcRenderer.invoke('minimizeApp'));
+    elements.maxButton?.addEventListener('click', () => ipcRenderer.invoke('toggleMaximizeApp'));
+    elements.restoreButton?.addEventListener('click', () => ipcRenderer.invoke('toggleMaximizeApp'));
+    elements.closeButton?.addEventListener('click', () => ipcRenderer.invoke('closeApp'));
+
+    ipcRenderer.on('window-maximized', () => {
+        elements.maxButton.style.display = 'none';
+        elements.restoreButton.style.display = 'flex';
+    });
+    ipcRenderer.on('window-unmaximized', () => {
+        elements.maxButton.style.display = 'flex';
+        elements.restoreButton.style.display = 'none';
+    });
     
-    // 3. Initialize the history feature
+    // --- Original Initialization Logic ---
+    initializeAppEventListeners();
     initializeHistory();
-
-    // 4. Update the window title with the app version
+    // MODIFIED: Simplified the call since the function now handles the DOM update itself.
     updateAppTitleWithVersion();
-
-    // 5. Set the initial UI state (show prompt, hide views)
     resetUI();
 
-    // 6. Hide the loading screen gracefully
-    if (window.appLoading && typeof window.appLoading.hide === 'function') {
-        setTimeout(() => { window.appLoading.hide(); }, 150);
-    } else {
-        console.error("Loading screen hide function (window.appLoading.hide) not found!");
-        const loadingScreen = document.getElementById('loading-screen');
-        if (loadingScreen) {
-             setTimeout(() => { loadingScreen.remove(); console.warn("Force removed loading screen as fallback."); }, 500);
+    // --- Loading Screen Logic ---
+    setTimeout(() => {
+        if (elements.loadingScreen) {
+            elements.loadingScreen.classList.add('fade-out');
+            elements.loadingScreen.addEventListener('transitionend', () => {
+                elements.loadingScreen.remove();
+            }, { once: true });
         }
-    }
+    }, 150);
 
-    console.log("Zip Analyser UI Initialized (Renderer).");
+    console.log("Zip Analyser UI Initialized.");
 });
-// <-- end comment (.js file)(renderer.js)

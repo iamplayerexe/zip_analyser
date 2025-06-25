@@ -5,15 +5,18 @@ const path = require('path');
 const { createWindow, getMainWindow } = require('./src/main-process/window-manager');
 const { initializeIpcHandlers } = require('./src/main-process/ipc-handlers');
 
+// --- THIS IS THE FIX: Development Mode Toggle ---
+// Set to 'true' when running with `npm start` to bypass the launcher check.
+// Set to 'false' before creating a production build.
+const IN_DEVELOPMENT_MODE = true;
+
 // This argument will be passed by the launcher when it starts the app.
 const LAUNCHER_ARG = '--launched-by-xutron';
-// This is the custom protocol the launcher will register.
-// We pass this app's ID so the launcher knows what to do after it starts.
 const LAUNCHER_PROTOCOL_URI = 'xutron-launcher://relaunch?appId=zipanalyser';
 
 // Check if the app was launched directly in production
-if (process.env.NODE_ENV !== 'development' && !process.argv.includes(LAUNCHER_ARG)) {
-    // If not launched by the launcher, try to open the launcher via its protocol and quit.
+// MODIFIED: This condition now uses the new boolean toggle.
+if (!IN_DEVELOPMENT_MODE && !process.argv.includes(LAUNCHER_ARG)) {
     console.log('Not launched by XutronCore Launcher. Attempting to open launcher...');
     try {
         shell.openExternal(LAUNCHER_PROTOCOL_URI);
@@ -26,13 +29,11 @@ if (process.env.NODE_ENV !== 'development' && !process.argv.includes(LAUNCHER_AR
     app.quit();
 } else {
     // --- ALL ORIGINAL APP INITIALIZATION CODE IS PLACED INSIDE THIS ELSE BLOCK ---
-    // --- (Update logic has been removed) ---
 
     if (require('electron-squirrel-startup')) {
       app.quit();
     }
 
-    // App Lifecycle Events
     app.whenReady().then(() => {
       console.log("Main Process: App ready.");
       initializeIpcHandlers();

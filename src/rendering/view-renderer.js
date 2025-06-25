@@ -1,11 +1,8 @@
-// <-- comment ( file)(src/rendering/view-renderer.js)
 // src/rendering/view-renderer.js
-// Responsibilities: All functions that directly manipulate the DOM to render views or update UI components.
-
 const { ipcRenderer } = require('electron');
 const hljs = require('highlight.js');
 
-const { showError, copyToClipboard } = require('../javascript/utils.js');
+const { copyToClipboard } = require('../javascript/utils.js');
 const {
     fileTreeWrapper, fileContentWrapper, outputWrapper
 } = require('../javascript/dom-elements.js');
@@ -16,7 +13,7 @@ function renderFileTreeText(treeString, wrapper) {
     if (!treeString || treeString.trim().length === 0) {
         const p = document.createElement('p');
         p.textContent = 'No files or folders found in the zip archive.';
-        p.style.cssText = 'padding: 15px; color: var(--text-disabled); text-align: center;';
+        p.style.cssText = 'padding: 15px; color: var(--subtitle-color); text-align: center;';
         wrapper.appendChild(p); return;
     }
     const pre = document.createElement('pre');
@@ -25,43 +22,77 @@ function renderFileTreeText(treeString, wrapper) {
     wrapper.appendChild(pre);
 }
 
+// MODIFIED: This function is completely rewritten for robustness.
 function renderFileContent(filesData, wrapper) {
      if (!wrapper) { console.error("Contents wrapper element not found"); return; }
      wrapper.innerHTML = '';
      const sortedPaths = Object.keys(filesData).sort();
+
      if (sortedPaths.length === 0) {
          const p = document.createElement('p');
-         p.textContent = "No text files found or readable in the zip archive.";
-         p.style.cssText = 'padding: 15px; color: var(--text-disabled); text-align: center;';
+         p.textContent = "No text files or images found in the zip archive.";
+         p.style.cssText = 'padding: 15px; color: var(--subtitle-color); text-align: center;';
          wrapper.appendChild(p); return;
      }
+
      sortedPaths.forEach(filePath => {
         const fileData = filesData[filePath];
-        let isTextContent = false, isImage = false, isExportable = false;
-        let languageIdentifier = 'plaintext';
+
+        // --- Create Card Structure ---
+        const card = document.createElement('div');
+        card.className = 'file-card';
+
+        const header = document.createElement('div');
+        header.className = 'file-card-header';
+        
+        const title = document.createElement('span');
+        title.className = 'file-card-title';
+        title.textContent = filePath;
+        title.title = filePath;
+
+        const actions = document.createElement('div');
+        actions.className = 'file-card-actions';
+
+        const content = document.createElement('div');
+        content.className = 'file-card-content';
+
+        // --- Determine Content Type and Populate ---
+        let isTextContent = false;
+        let isImage = false;
+        let isExportable = false;
 
         if (typeof fileData === 'object' && fileData?.isImage) {
             isImage = true;
             isExportable = true;
+            const img = document.createElement('img');
+            img.src = fileData.content;
+            img.alt = `Preview of ${filePath}`;
+            img.className = 'image-preview';
+            content.appendChild(img);
         } else if (typeof fileData === 'string' && !fileData.startsWith('[')) {
             isTextContent = true;
             isExportable = true;
-            const extension = filePath.split('.').pop()?.toLowerCase() || '';
-            if (extension) {
-                languageIdentifier = {py: 'python', js: 'javascript', ts: 'typescript', sh: 'bash', md: 'markdown', cs: 'csharp'}[extension] || extension;
-            }
+            const pre = document.createElement('pre');
+            const code = document.createElement('code');
+            const extension = filePath.split('.').pop()?.toLowerCase() || 'plaintext';
+            const lang = {py: 'python', js: 'javascript', ts: 'typescript', sh: 'bash', md: 'markdown', cs: 'csharp'}[extension] || extension;
+
+            code.className = `language-${lang}`;
+            code.textContent = fileData;
+            try { hljs.highlightElement(code); } catch (err) { /* Fails gracefully for unknown languages */ }
+            pre.appendChild(code);
+            content.appendChild(pre);
+        } else {
+            // Handle binary/unreadable files
+            const p = document.createElement('p');
+            p.textContent = fileData || '[Unreadable File]';
+            p.style.cssText = 'margin: auto; color: var(--subtitle-color);';
+            content.appendChild(p);
         }
 
-        const card = document.createElement('div'); card.classList.add('file-card');
-        const header = document.createElement('div'); header.classList.add('file-card-header');
-        const title = document.createElement('span'); title.classList.add('file-card-title');
-        title.textContent = filePath; title.title = filePath;
-
-        const actionsWrapper = document.createElement('div');
-        actionsWrapper.classList.add('file-card-actions');
-
+        // --- Create and Append Buttons ---
         const copyButton = document.createElement('button');
-        copyButton.classList.add('copy-button', 'small-button');
+        copyButton.className = 'small-button copy-button';
         copyButton.textContent = 'Copy';
         copyButton.disabled = !isTextContent;
         if (isTextContent) {
@@ -69,45 +100,17 @@ function renderFileContent(filesData, wrapper) {
         }
 
         const exportButton = document.createElement('button');
-        exportButton.classList.add('export-file-button', 'small-button');
+        exportButton.className = 'small-button export-file-button';
         exportButton.textContent = 'Export';
         exportButton.disabled = !isExportable;
-        // CORRECTION : Ajout des data-attributes pour la délégation
         if (isExportable) {
             exportButton.dataset.path = filePath;
             exportButton.dataset.isImage = isImage;
         }
 
-        actionsWrapper.appendChild(copyButton);
-        actionsWrapper.appendChild(exportButton);
-        header.appendChild(title);
-        header.appendChild(actionsWrapper);
-
-        const contentWrapper = document.createElement('div'); contentWrapper.classList.add('file-card-content');
-        
-        if (isImage) {
-            const img = document.createElement('img');
-            img.src = fileData.content;
-            img.alt = `Preview of ${filePath}`;
-            img.classList.add('image-preview');
-            contentWrapper.appendChild(img);
-        } else {
-            const pre = document.createElement('pre');
-            const code = document.createElement('code');
-            if (isTextContent) {
-                code.className = `language-${languageIdentifier}`;
-                code.textContent = fileData;
-                try { hljs.highlightElement(code); } catch (err) { console.error(err); }
-            } else {
-                code.className = 'language-plaintext';
-                code.textContent = fileData || '[Error reading file data]';
-                pre.style.opacity = '0.7';
-            }
-            pre.appendChild(code);
-            contentWrapper.appendChild(pre);
-        }
-
-        card.appendChild(header); card.appendChild(contentWrapper);
+        actions.append(copyButton, exportButton);
+        header.append(title, actions);
+        card.append(header, content);
         wrapper.appendChild(card);
      });
 }
@@ -118,7 +121,7 @@ function renderConcatenatedOutput(concatenatedText, wrapper) {
     if (!concatenatedText || concatenatedText.trim().length === 0) {
         const p = document.createElement('p');
         p.textContent = 'No text file content available to concatenate.';
-        p.style.cssText = 'padding: 15px; color: var(--text-disabled); text-align: center;';
+        p.style.cssText = 'padding: 15px; color: var(--subtitle-color); text-align: center;';
         wrapper.appendChild(p); return;
     }
     const pre = document.createElement('pre');
@@ -128,11 +131,11 @@ function renderConcatenatedOutput(concatenatedText, wrapper) {
 }
 
 async function updateAppTitleWithVersion() {
-    const titleSpan = document.getElementById('window-title-text');
-    if (!titleSpan) return;
+    const versionSpan = document.getElementById('app-version');
+    if (!versionSpan) return;
     try {
         const appVersion = await ipcRenderer.invoke('get-app-version');
-        if (appVersion) titleSpan.textContent = `Zip Analyser v${appVersion}`;
+        if (appVersion) versionSpan.textContent = `v${appVersion}`;
     } catch (error) {
         console.error('Failed to get app version via IPC:', error);
     }
@@ -144,4 +147,3 @@ module.exports = {
     renderConcatenatedOutput,
     updateAppTitleWithVersion
 };
-// <-- end comment (.js file)(src/rendering/view-renderer.js)
