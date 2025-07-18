@@ -8,7 +8,7 @@ const { initializeIpcHandlers } = require('./src/main-process/ipc-handlers');
 // --- THIS IS THE FIX: Development Mode Toggle ---
 // Set to 'true' when running with `npm start` to bypass the launcher check.
 // Set to 'false' before creating a production build.
-const IN_DEVELOPMENT_MODE = true;
+const IN_DEVELOPMENT_MODE = false;
 
 // This argument will be passed by the launcher when it starts the app.
 const LAUNCHER_ARG = '--launched-by-xutron';
